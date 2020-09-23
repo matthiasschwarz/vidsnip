@@ -101,7 +101,6 @@ export default Vue.extend({
       this.$store.dispatch("switchMode", n);
       if (n === 0 && !this.$store.getters.initialMode) {
         this.$refs.video.rerenderPlayer();
-        console.log("switchMode");
         //this.$store.dispatch('reload');
       }
     },
