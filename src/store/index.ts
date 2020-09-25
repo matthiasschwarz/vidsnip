@@ -5,7 +5,6 @@ import { default as Vuex } from "vuex";
 import {
   Change,
   ChangeType,
-  getTypeTooltip,
   IndexableSection,
   Section,
   SectionAdd,
@@ -40,17 +39,11 @@ const historyModule = {
     isRedo(state: any): boolean {
       return state.index < state.changes.length - 1;
     },
-    undoTooltip(state: any): string {
-      let tooltip = "Undo";
-      const change = state.changes[state.index];
-      if (change !== undefined) tooltip += ` ${getTypeTooltip(change.type)}`;
-      return tooltip;
+    currentUndo(state: any): Change | undefined {
+      return state.changes[state.index];
     },
-    redoTooltip(state: any): string {
-      let tooltip = "Redo";
-      const change = state.changes[state.index + 1];
-      if (change !== undefined) tooltip += ` ${getTypeTooltip(change.type)}`;
-      return tooltip;
+    currentRedo(state: any): Change | undefined {
+      return state.changes[state.index + 1];
     }
   },
   mutations: {

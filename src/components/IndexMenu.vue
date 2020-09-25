@@ -18,11 +18,11 @@
             >{{ index + 1 }}</v-btn
           >
         </template>
-        <span>Edit</span>
+        <span>{{ $t("editItem") }}</span>
       </v-tooltip>
     </template>
     <v-card v-if="show">
-      <v-card-title>Edit index</v-card-title>
+      <v-card-title>{{ $t("editIndex") }}</v-card-title>
       <v-card-text style="padding-bottom: 0">
         <v-list dense class="pa-0">
           <v-list-item class="pa-0">
@@ -67,13 +67,13 @@
               color="green"
               @click="onSave"
               :disabled="error"
-              >Save</v-btn
+              >{{ $t("save") }}</v-btn
             >
           </v-col>
           <v-col>
-            <v-btn tile text block small color="red" @click="onCancel"
-              >Cancel</v-btn
-            >
+            <v-btn tile text block small color="red" @click="onCancel">{{
+              $t("cancel")
+            }}</v-btn>
           </v-col>
         </v-row>
       </v-card-actions>
@@ -108,13 +108,17 @@ export default {
     onInvalid(error) {
       switch (error.type) {
         case InputErrorType.LESS:
-          this.errorMessage = `Must be higher or equals than the minimum index of ${error.min}`;
+          this.errorMessage = this.$t("error.index.lower", {
+            value: error.min
+          });
           break;
         case InputErrorType.GREATER:
-          this.errorMessage = `Must be less or equals than the maximum index of ${error.max}`;
+          this.errorMessage = this.$t("error.index.higher", {
+            value: error.max
+          });
           break;
         default:
-          this.errorMessage = "Invalid index";
+          this.errorMessage = this.$t("error.index.invalid");
       }
     },
     onSave() {

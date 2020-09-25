@@ -3,7 +3,7 @@
     <v-list-item class="pa-0" v-if="units.length !== 0">
       <v-row no-gutters justify="center">
         <v-col align-self="center">
-          <div>
+          <div class="d-flex justify-center">
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
                 <v-btn
@@ -11,6 +11,7 @@
                   v-on="on"
                   @click="setToCurrentTime"
                   :disabled="currentTimeDisabled"
+                  style="margin-top: 8px; margin-right: 8px"
                 >
                   <v-icon>
                     mdi-arrow-expand-horizontal
@@ -18,7 +19,7 @@
                 </v-btn>
               </template>
               <span>
-                Current time
+                {{ $t("currentTime") }}
               </span>
             </v-tooltip>
           </div>
@@ -45,17 +46,22 @@
           </v-col>
         </template>
         <v-col align-self="center" class="text-right">
-          <div class="justify-end">
+          <div class="d-flex justify-center">
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
-                <v-btn icon v-on="on" @click="setToInitial">
+                <v-btn
+                  icon
+                  v-on="on"
+                  @click="setToInitial"
+                  style="margin-top: 8px; margin-left: 8px"
+                >
                   <v-icon>
                     mdi-delete
                   </v-icon>
                 </v-btn>
               </template>
               <span>
-                Delete
+                {{ $t("delete") }}
               </span>
             </v-tooltip>
           </div>
@@ -80,7 +86,7 @@
 </template>
 
 <script>
-import { Timestamp } from "vidsnip-utils";
+import { Timestamp, capitalizeFirstLetter } from "vidsnip-utils";
 import BoundedIntegerField from "@/components/BoundedIntegerField";
 // TODO left / right key to jump to the next / previous unit
 export default {
@@ -120,29 +126,25 @@ export default {
       if (error !== undefined) {
         switch (error.type) {
           case "UnitRange":
-            return (
-              error.args.getName(2) +
-              " must be between " +
-              error.args.minValue +
-              " and " +
-              error.args.maxValue
-            );
+            return this.$t("error.timestamp.range", {
+              name: capitalizeFirstLetter(
+                this.$t(`unit.${error.args.identifier}`).toString()
+              ),
+              min: error.args.minValue,
+              max: error.args.maxValue
+            });
           case "HigherTimestamp":
-            return (
-              "Must be lower than the " +
-              error.args.type +
-              " of " +
-              error.args.value.toString()
-            );
+            return this.$t("error.timestamp.higher", {
+              name: this.$t(error.args.type),
+              value: error.args.value.toString()
+            });
           case "LowerTimestamp":
-            return (
-              "Must be higher than the " +
-              error.args.type +
-              " of " +
-              error.args.value.toString()
-            );
+            return this.$t("error.timestamp.lower", {
+              name: this.$t(error.args.type),
+              value: error.args.value.toString()
+            });
           case "NoUnits":
-            return "No change possible";
+            return this.$t("error.timestamp.unit");
         }
       }
       return "";

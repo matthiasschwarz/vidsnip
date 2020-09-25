@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-card-title>Edit {{ type }}</v-card-title>
+    <v-card-title>{{ type }}</v-card-title>
     <v-card-text style="padding-bottom: 0">
       <TimestampField
         v-bind="$attrs"
@@ -23,13 +23,13 @@
             color="green"
             @click="onSave()"
             :disabled="disabledSave"
-            >Save</v-btn
+            >{{ $t("save") }}</v-btn
           >
         </v-col>
         <v-col>
-          <v-btn tile text block small color="red" @click="onCancel()"
-            >Cancel</v-btn
-          >
+          <v-btn tile text block small color="red" @click="onCancel()">{{
+            $t("cancel")
+          }}</v-btn>
         </v-col>
       </v-row>
     </v-card-actions>

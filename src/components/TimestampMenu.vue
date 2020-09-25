@@ -19,7 +19,7 @@
             >{{ initial.toString() }}</v-btn
           >
         </template>
-        <span>Edit</span>
+        <span>{{ $t("editItem") }}</span>
       </v-tooltip>
     </template>
     <TimestampEdit

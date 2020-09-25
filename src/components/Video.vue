@@ -43,7 +43,7 @@
                 </v-row>
               </template>
               <template v-else>
-                <v-card-title>Sections</v-card-title>
+                <v-card-title>{{ $tc("section", 2) }}</v-card-title>
               </template>
             </div>
             <div class="section-table-content">
@@ -85,7 +85,7 @@
                             <v-icon>mdi-plus</v-icon>
                           </v-btn>
                         </template>
-                        <span>New section</span>
+                        <span>{{ $t("newSection") }}</span>
                       </v-tooltip>
                     </v-col>
                     <v-col>
@@ -107,10 +107,10 @@
                           </v-btn>
                         </template>
                         <span v-if="showIndex">
-                          Hide indices
+                          {{ $t("hideIndices") }}
                         </span>
                         <span v-else>
-                          Show indices
+                          {{ $t("showIndices") }}
                         </span>
                       </v-tooltip>
                     </v-col>
@@ -128,7 +128,7 @@
                             <v-icon>mdi-arrow-split-vertical</v-icon>
                           </v-btn>
                         </template>
-                        <span>Split current section</span>
+                        <span>{{ $t("splitCurrentSection") }}</span>
                       </v-tooltip>
                     </v-col>
                     <v-col>
@@ -145,7 +145,7 @@
                             <v-icon>mdi-undo</v-icon>
                           </v-btn>
                         </template>
-                        <span>{{ $store.getters["history/undoTooltip"] }}</span>
+                        <span>{{ undoTooltip }}</span>
                       </v-tooltip>
                     </v-col>
                     <v-col>
@@ -162,7 +162,7 @@
                             <v-icon>mdi-redo</v-icon>
                           </v-btn>
                         </template>
-                        <span>{{ $store.getters["history/redoTooltip"] }}</span>
+                        <span>{{ redoTooltip }}</span>
                       </v-tooltip>
                     </v-col>
                   </v-row>
@@ -173,8 +173,8 @@
                       <tr>
                         <th v-if="$store.getters.isEditMode"></th>
                         <th v-if="showIndex && $store.getters.isEditMode"></th>
-                        <th class="text-center">Start</th>
-                        <th class="text-center">End</th>
+                        <th class="text-center">{{ $t("start") }}</th>
+                        <th class="text-center">{{ $t("end") }}</th>
                         <th v-if="$store.getters.isEditMode"></th>
                       </tr>
                     </thead>
@@ -208,7 +208,7 @@
                                     ><v-icon small>mdi-play</v-icon></v-btn
                                   >
                                 </template>
-                                <span>Play</span>
+                                <span>{{ $t("play") }}</span>
                               </v-tooltip>
                             </template>
                             <template v-else>
@@ -225,7 +225,7 @@
                                     ></v-btn
                                   >
                                 </template>
-                                <span>Deselect</span>
+                                <span>{{ $t("deselect") }}</span>
                               </v-tooltip>
                             </template>
                           </td>
@@ -236,15 +236,19 @@
                           </td>
                         </template>
                         <template v-if="$store.getters.isPlayMode">
-                          <td>{{ section.start.toString() }}</td>
-                          <td>{{ section.end.toString() }}</td>
+                          <td class="text-right">
+                            {{ section.start.toString() }}
+                          </td>
+                          <td class="text-right">
+                            {{ section.end.toString() }}
+                          </td>
                         </template>
                         <template v-else-if="$store.getters.isEditMode">
-                          <td>
+                          <td class="text-right">
                             <TimestampMenu
-                              type="section start"
+                              :type="$t('editSectionStart')"
                               :initial="section.start"
-                              :max="{ type: 'section end', value: section.end }"
+                              :max="{ type: 'sectionEnd', value: section.end }"
                               @save="
                                 $store.dispatch(
                                   'updateSectionStartWithHistory',
@@ -256,16 +260,16 @@
                               "
                             ></TimestampMenu>
                           </td>
-                          <td>
+                          <td class="text-right">
                             <TimestampMenu
-                              type="section end"
+                              :type="$t('editSectionEnd')"
                               :initial="section.end"
                               :min="{
-                                type: 'section start',
+                                type: 'sectionStart',
                                 value: section.start
                               }"
                               :max="{
-                                type: 'duration',
+                                type: $t('duration'),
                                 value: $store.getters['video/duration']
                               }"
                               @save="
@@ -292,7 +296,7 @@
                                   <v-icon small>mdi-delete</v-icon>
                                 </v-btn>
                               </template>
-                              <span>Delete section</span>
+                              <span>{{ $t("delete") }}</span>
                             </v-tooltip>
                           </td>
                         </template>
@@ -307,9 +311,9 @@
                 </template>
                 <template v-else>
                   <div style="width: 100%">
-                    <v-alert tile class="text-center text-body-1"
-                      >No sections</v-alert
-                    >
+                    <v-alert tile class="text-center text-body-1">{{
+                      $t("noSections")
+                    }}</v-alert>
                   </div>
                 </template>
               </template>
@@ -368,6 +372,14 @@ export default {
         this.$store.getters["video/currentSectionEnd"].fullSeconds ===
           currentTimeSeconds
       );
+    },
+    undoTooltip() {
+      const change = this.$store.getters["history/currentUndo"];
+      return change !== undefined ? this.$t(`change.undo.${change.type}`) : "";
+    },
+    redoTooltip() {
+      const change = this.$store.getters["history/currentRedo"];
+      return change !== undefined ? this.$t(`change.redo.${change.type}`) : "";
     }
   },
   methods: {

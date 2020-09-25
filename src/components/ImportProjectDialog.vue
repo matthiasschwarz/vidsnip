@@ -7,7 +7,7 @@
   >
     <v-card>
       <v-card-title>
-        <span>Import</span>
+        <span>{{ $t("import") }}</span>
         <template v-if="closeable">
           <v-spacer></v-spacer>
           <v-tooltip bottom>
@@ -16,7 +16,7 @@
                 ><v-icon>mdi-close</v-icon></v-btn
               >
             </template>
-            <span>Close</span>
+            <span>{{ $t("close") }}</span>
           </v-tooltip>
         </template>
       </v-card-title>
@@ -25,21 +25,21 @@
           <v-col cols="12">
             <v-text-field
               v-model="value"
-              label="Video URL or ID"
+              :label="$t('importVideo')"
               prepend-icon="mdi-youtube"
             ></v-text-field>
           </v-col>
         </v-row>
         <v-row>
           <v-col cols="12" class="d-flex justify-center">
-            <span class="text-body-1">or</span>
+            <span class="text-body-1">{{ $t("or") }}</span>
           </v-col>
         </v-row>
         <v-row no-gutters>
           <v-col cols="12">
             <v-text-field
               v-model="code"
-              label="Shared code"
+              :label="$t('importCode')"
               prepend-icon="mdi-share-variant"
             ></v-text-field>
           </v-col>

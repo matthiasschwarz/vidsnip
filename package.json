@@ -14,6 +14,7 @@
     "vidsnip-codec": "github:matthiasschwarz/vidsnip-codec",
     "vidsnip-utils": "github:matthiasschwarz/vidsnip-utils",
     "vue": "^2.6.12",
+    "vue-i18n": "^8.21.1",
     "vue-youtube": "^1.4.0",
     "vuetify": "^2.3.10",
     "vuex": "^3.5.1"

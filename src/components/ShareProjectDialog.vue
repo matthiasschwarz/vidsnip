@@ -2,7 +2,7 @@
   <v-dialog :value="show" width="unset" @click:outside="show = false">
     <v-card>
       <v-card-title>
-        <span>Share</span>
+        <span>{{ $t("share") }}</span>
         <v-spacer></v-spacer>
         <v-tooltip bottom>
           <template v-slot:activator="{ on: tooltip }">
@@ -10,7 +10,7 @@
               ><v-icon>mdi-close</v-icon></v-btn
             >
           </template>
-          <span>Close</span>
+          <span>{{ $t("close") }}</span>
         </v-tooltip>
       </v-card-title>
       <v-card-text>
@@ -33,7 +33,7 @@
                       ><v-icon>mdi-content-copy</v-icon></v-btn
                     >
                   </template>
-                  <span>Copy</span>
+                  <span>{{ $t("copy") }}</span>
                 </v-tooltip>
               </template>
             </v-textarea>

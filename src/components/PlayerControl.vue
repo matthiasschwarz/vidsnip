@@ -20,7 +20,7 @@
                       ><v-icon>mdi-skip-previous</v-icon></v-btn
                     >
                   </template>
-                  <span>Play previous section</span>
+                  <span>{{ $t("playPreviousSection") }}</span>
                 </v-tooltip>
                 <v-tooltip bottom v-if="isPlay">
                   <template v-slot:activator="{ on: tooltip }">
@@ -38,8 +38,9 @@
                       @click="$store.getters['video/player/player'].playVideo()"
                     >
                       <v-icon dark>mdi-play</v-icon>
-                    </v-btn> </template
-                  >Play
+                    </v-btn>
+                  </template>
+                  {{ $t("play") }}
                 </v-tooltip>
                 <v-tooltip bottom v-else-if="isPause">
                   <template v-slot:activator="{ on: tooltip }">
@@ -59,8 +60,9 @@
                       "
                     >
                       <v-icon dark>mdi-pause</v-icon>
-                    </v-btn> </template
-                  >Pause
+                    </v-btn>
+                  </template>
+                  {{ $t("pause") }}
                 </v-tooltip>
                 <v-tooltip bottom v-else-if="isRestart">
                   <template v-slot:activator="{ on: tooltip }">
@@ -78,8 +80,9 @@
                       @click="restart"
                     >
                       <v-icon dark>mdi-restart</v-icon>
-                    </v-btn> </template
-                  >Restart
+                    </v-btn>
+                  </template>
+                  {{ $t("restart") }}
                 </v-tooltip>
                 <v-tooltip bottom>
                   <template v-slot:activator="{ on: tooltip }">
@@ -91,7 +94,7 @@
                       ><v-icon>mdi-skip-next</v-icon></v-btn
                     >
                   </template>
-                  <span>Play next section</span>
+                  <span>{{ $t("playNextSection") }}</span>
                 </v-tooltip>
               </template>
             </v-col>
@@ -103,7 +106,7 @@
                       ><v-icon>mdi-share</v-icon></v-btn
                     >
                   </template>
-                  <span>Share</span>
+                  <span>{{ $t("share") }}</span>
                 </v-tooltip>
               </template>
             </v-col>
