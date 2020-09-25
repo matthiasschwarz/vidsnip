@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/precache-manifest.1ee1869dce85a19c74accc22df3df750.js"
+  "/precache-manifest.ecafede460edeb76265669359540fbec.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "vidsnip"});
