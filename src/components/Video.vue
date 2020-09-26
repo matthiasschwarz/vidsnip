@@ -25,6 +25,7 @@
             ref="player"
             :start="start"
             @currentTimeChange="currentTimeChange"
+            @invalidVideo="invalidVideo($event)"
           />
         </v-card>
       </div>
@@ -328,7 +329,11 @@
     <import-project-dialog
       ref="importDialog"
       @rerenderPlayer="rerenderPlayer"
+      @closeErrorSnackbar="closeErrorSnackbar"
     ></import-project-dialog>
+    <v-snackbar v-model="errorSnackbar" text timeout="6000" color="error" top
+      ><div class="text-center">{{ errorSnackbarMessage }}</div></v-snackbar
+    >
   </v-container>
 </template>
 
@@ -352,7 +357,9 @@ export default {
   data: () => ({
     timestampEdit: false,
     playerKey: 0,
-    showIndex: false
+    showIndex: false,
+    errorSnackbar: false,
+    errorSnackbarMessage: ""
   }),
   computed: {
     player() {
@@ -436,6 +443,20 @@ export default {
     },
     openCloseableImportDialog() {
       this.$refs.importDialog.showCloseable();
+    },
+    invalidVideo(error) {
+      this.showErrorSnackbar(error);
+      this.openPersistentImportDialog();
+    },
+    showErrorSnackbar(message) {
+      console.log("show snackbar");
+      this.errorSnackbarMessage = message;
+      this.errorSnackbar = true;
+      console.log("show snackbar", this.errorSnackbar);
+    },
+    closeErrorSnackbar() {
+      this.errorSnackbar = false;
+      this.errorSnackbarMessage = "";
     }
   },
   mounted() {

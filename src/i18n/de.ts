@@ -75,6 +75,7 @@ export default {
         "Muss kleiner oder gleich als der maximale Index von {value} sein",
       lower: "Muss größer oder gleich als der minimale Index von {value} sein",
       invalid: "Ungültiger Index"
-    }
+    },
+    invalidVideo: "Kein Video unter diesen Eingaben gefunden"
   }
 };

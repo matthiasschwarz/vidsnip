@@ -61,6 +61,15 @@ export default {
       });
     },
     ready(player) {
+      if (player.getDuration() === 0) {
+        this.$store.commit("video/player/hidden", true);
+        this.$emit("invalidVideo", this.$t("error.invalidVideo"));
+        if (this.$store.getters["video/player/rendering"])
+          this.$store.commit("loaded", false);
+        this.$store.commit("video/player/rendering", false);
+        this.$destroy();
+        return;
+      }
       this.$store.commit("video/player/player", player);
       this.currentTimeIntervalId = setInterval(() => {
         const currentTime = Timestamp.fromSeconds(player.getCurrentTime());

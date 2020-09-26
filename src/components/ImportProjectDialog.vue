@@ -69,8 +69,11 @@ export default {
       }
     },
     value(value) {
+      if (value !== "") this.$emit("closeErrorSnackbar");
       const id = this.$youtube.getIdFromUrl(value, { fuzzy: false }) ?? value;
       if (validId(id)) {
+        this.$store.commit("video/player/hidden", true);
+        this.$store.commit("loaded", false);
         this.$store.commit("video/id", id);
         if (this.closeable) {
           this.$store.commit("history/clear");
@@ -87,8 +90,11 @@ export default {
       }
     },
     code(value) {
+      if (value !== "") this.$emit("closeErrorSnackbar");
       const video = decode(value);
       if (video !== null && validId(video.id)) {
+        this.$store.commit("video/player/hidden", true);
+        this.$store.commit("loaded", false);
         this.$store.commit("video/id", video.id);
         this.$store.commit(
           "video/sections/index",
@@ -102,7 +108,6 @@ export default {
               this.$store.commit('loaded', false);
               this.$store.commit("video/player/rendering", false);*/
         }
-        //TODO check for valid id via https://oembed.com/
         this.$store.commit("video/sections/splice", {
           index: 0,
           deleteCount: Number.MAX_SAFE_INTEGER,
@@ -119,13 +124,15 @@ export default {
     }
   },
   methods: {
-    showPersistent() {
+    showPersistent(error) {
       this.closeable = false;
       this.show = true;
+      if (error) this.errorSnackbar = true;
     },
-    showCloseable() {
+    showCloseable(error) {
       this.closeable = true;
       this.show = true;
+      if (error) this.errorSnackbar = true;
     }
   }
 };

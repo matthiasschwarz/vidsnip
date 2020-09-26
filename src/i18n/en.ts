@@ -74,6 +74,7 @@ export default {
       higher: "Must be less or equals than the maximum index of {value}",
       lower: "Must be higher or equals than the minimum index of {value}",
       invalid: "Invalid index"
-    }
+    },
+    invalidVideo: "No video found under the given input"
   }
 };
