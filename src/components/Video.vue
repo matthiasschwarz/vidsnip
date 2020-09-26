@@ -168,7 +168,7 @@
                     </v-col>
                   </v-row>
                 </template>
-                <v-simple-table fixed-header height="100%">
+                <v-simple-table fixed-header :height="sectionHeight">
                   <template v-slot:default>
                     <thead>
                       <tr>
@@ -359,7 +359,9 @@ export default {
     playerKey: 0,
     showIndex: false,
     errorSnackbar: false,
-    errorSnackbarMessage: ""
+    errorSnackbarMessage: "",
+    sectionHeight: 0,
+    unwatchSectionHeight: undefined
   }),
   computed: {
     player() {
@@ -457,11 +459,33 @@ export default {
     closeErrorSnackbar() {
       this.errorSnackbar = false;
       this.errorSnackbarMessage = "";
+    },
+    getSectionHeight() {
+      return this.$store.getters["video/sections/sections"].length !== 0
+        ? window.innerHeight -
+          48 - // toolbar height
+          64 - // section table title height
+          24 - // card padding, margin and border heights
+            (this.$store.getters["isEditMode"] ? 36 : 0) -
+            1
+        : 0;
+    },
+    resizeEventListener() {
+      this.$nextTick(() => (this.sectionHeight = this.getSectionHeight()));
     }
   },
   mounted() {
+    this.unwatchSectionHeight = this.$watch(
+      this.getSectionHeight,
+      () => (this.sectionHeight = this.getSectionHeight())
+    );
+    window.addEventListener("resize", this.resizeEventListener);
     if (this.$store.getters["video/invalidId"])
       this.openPersistentImportDialog();
+  },
+  destroyed() {
+    window.removeEventListener("resize", this.resizeEventListener);
+    this.unwatchSectionHeight();
   }
 };
 </script>
