@@ -271,8 +271,8 @@
                                 value: section.start,
                               }"
                               :max="{
-                                type: $t('duration'),
-                                value: $store.getters['video/duration'],
+                                type: 'sectionEnd',
+                                value: durationBound,
                               }"
                               @save="
                                 $store.dispatch('updateSectionEndWithHistory', {
@@ -376,6 +376,11 @@ export default Vue.extend({
       return this.$store.getters["video/sections/sections"].length !== 0
         ? this.$store.getters["video/sections/sections"][0].start.fullSeconds
         : undefined;
+    },
+    durationBound() {
+      const duration = this.$store.getters["video/duration"].clone();
+      duration.increaseUnitValue("seconds", 1);
+      return duration;
     },
     splitSectionDisabled() {
       const currentTimeSeconds = this.$store.getters["video/currentTime"]
