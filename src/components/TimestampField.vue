@@ -13,9 +13,7 @@
                   :disabled="currentTimeDisabled"
                   style="margin-top: 8px; margin-right: 8px"
                 >
-                  <v-icon>
-                    mdi-arrow-expand-horizontal
-                  </v-icon>
+                  <v-icon> mdi-arrow-expand-horizontal </v-icon>
                 </v-btn>
               </template>
               <span>
@@ -55,9 +53,7 @@
                   @click="setToInitial"
                   style="margin-top: 8px; margin-left: 8px"
                 >
-                  <v-icon>
-                    mdi-delete
-                  </v-icon>
+                  <v-icon> mdi-delete </v-icon>
                 </v-btn>
               </template>
               <span>
@@ -69,7 +65,12 @@
       </v-row>
     </v-list-item>
     <v-list-item
-      style="min-height: auto; padding-left: 0; padding-right: 0; padding-top: 8px"
+      style="
+        min-height: auto;
+        padding-left: 0;
+        padding-right: 0;
+        padding-top: 8px;
+      "
     >
       <v-alert
         dense
@@ -86,37 +87,33 @@
 </template>
 
 <script>
+import Vue from "vue";
 import { Timestamp, capitalizeFirstLetter } from "vidsnip-utils";
 import BoundedIntegerField from "@/components/BoundedIntegerField";
 // TODO left / right key to jump to the next / previous unit
-export default {
+export default Vue.extend({
   name: "TimestampField",
   components: { BoundedIntegerField },
   props: {
     type: String,
     initial: Timestamp,
     min: Object,
-    max: Object
+    max: Object,
   },
   data: () => ({
     value: Timestamp,
-    invalid: []
+    invalid: [],
   }),
   computed: {
     currentTimeDisabled() {
-      if (
-        this.max &&
-        this.$store.getters["video/currentTime"].fullSeconds >=
-          this.max.value.fullSeconds
-      )
-        return true;
-      if (
-        this.min &&
-        this.$store.getters["video/currentTime"].fullSeconds <=
-          this.min.value.fullSeconds
-      )
-        return true;
-      return false;
+      return (
+        (this.max &&
+          this.$store.getters["video/currentTime"].fullSeconds >=
+            this.max.value.fullSeconds) ||
+        (this.min &&
+          this.$store.getters["video/currentTime"].fullSeconds <=
+            this.min.value.fullSeconds)
+      );
     },
     error() {
       return this.invalid.length !== 0;
@@ -131,17 +128,17 @@ export default {
                 this.$t(`unit.${error.args.identifier}`).toString()
               ),
               min: error.args.minValue,
-              max: error.args.maxValue
+              max: error.args.maxValue,
             });
           case "HigherTimestamp":
             return this.$t("error.timestamp.higher", {
               name: this.$t(error.args.type),
-              value: error.args.value.toString()
+              value: error.args.value.toString(),
             });
           case "LowerTimestamp":
             return this.$t("error.timestamp.lower", {
               name: this.$t(error.args.type),
-              value: error.args.value.toString()
+              value: error.args.value.toString(),
             });
           case "NoUnits":
             return this.$t("error.timestamp.unit");
@@ -151,7 +148,7 @@ export default {
     },
     units() {
       return this.max.value.trimToArray();
-    }
+    },
   },
   mounted() {
     this.value = this.initial.clone();
@@ -191,7 +188,7 @@ export default {
       else if (unitField.valid) {
         this.value.setUnitValue(unit.format.identifier, unitField.integerValue);
         const index = this.invalid.findIndex(
-          value => value.type === "UnitRange" && value.args === unit.format
+          (value) => value.type === "UnitRange" && value.args === unit.format
         );
         if (index !== -1) {
           this.invalid.splice(index, 1);
@@ -200,30 +197,30 @@ export default {
       } else {
         if (
           this.invalid.findIndex(
-            value => value.type === "UnitRange" && value.args === unit.format
+            (value) => value.type === "UnitRange" && value.args === unit.format
           ) === -1
         ) {
           const error = {
             type: "UnitRange",
-            args: unit.format
+            args: unit.format,
           };
           this.invalid.push(error);
           this.$emit("invalid", {
             invalid: error,
-            array: this.invalid
+            array: this.invalid,
           });
         }
       }
 
       function timestampRange(it, predicate, type, args) {
-        const index = it.invalid.findIndex(value => value.type === type);
+        const index = it.invalid.findIndex((value) => value.type === type);
         if (predicate) {
           if (index === -1) {
             const error = { type, args };
             it.invalid.push(error);
             it.$emit("invalid", {
               invalid: error,
-              array: it.invalid
+              array: it.invalid,
             });
           }
         } else if (index !== -1) {
@@ -258,9 +255,9 @@ export default {
       for (const unit of this.units) this.unitField(unit).clear();
       this.invalid = [];
       this.value = this.initial.clone();
-    }
-  }
-};
+    },
+  },
+});
 </script>
 
 <style scoped>

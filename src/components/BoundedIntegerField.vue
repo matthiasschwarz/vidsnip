@@ -18,6 +18,7 @@
 </template>
 
 <script>
+import Vue from "vue";
 import { InputErrorType } from "vidsnip-utils";
 
 const nonIntegerRegex = RegExp(/[^0-9]/g);
@@ -30,29 +31,29 @@ const allowedBeforeInputInsertTypes = [
   "insertFromPaste",
   "insertTranspose",
   "insertCompositionText",
-  "insertFromComposition"
+  "insertFromComposition",
 ];
-export default {
+export default Vue.extend({
   name: "BoundedIntegerField",
   props: {
     min: {
       type: Number,
-      default: Number.MIN_SAFE_INTEGER
+      default: Number.MIN_SAFE_INTEGER,
     },
     max: {
       type: Number,
-      default: Number.MAX_SAFE_INTEGER
+      default: Number.MAX_SAFE_INTEGER,
     },
     placeholder: Number,
     label: String,
     inclusive: {
       type: Boolean,
-      default: true
-    }
+      default: true,
+    },
   },
   data: () => ({
     value: "",
-    inRange: undefined
+    inRange: undefined,
   }),
   methods: {
     onEnter() {
@@ -81,7 +82,7 @@ export default {
     },
     clear() {
       this.value = "";
-    }
+    },
   },
   computed: {
     width() {
@@ -96,7 +97,7 @@ export default {
     valid() {
       const value = this.integerValue;
       return isNaN(value) || this.inRange(value);
-    }
+    },
   },
   watch: {
     valid(valid) {
@@ -110,14 +111,14 @@ export default {
             ? { type: InputErrorType.GREATER, max: this.max }
             : { type: InputErrorType.UNKNOWN }
         );
-    }
+    },
   },
   beforeMount() {
     this.inRange = this.inclusive
       ? this.inRangeInclusive
       : this.inRangeExclusive;
-  }
-};
+  },
+});
 </script>
 
 <style lang="css">

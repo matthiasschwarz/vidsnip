@@ -12,13 +12,13 @@ import {
   SectionSplit,
   SectionSwap,
   Timestamp,
-  TimestampUpdate
+  TimestampUpdate,
 } from "vidsnip-utils";
 import {
   Video as VideoCodec,
   Section as VideoCodecSection,
   encode,
-  decode
+  decode,
 } from "vidsnip-codec";
 
 Vue.use(Vuex);
@@ -27,7 +27,7 @@ const historyModule = {
   namespaced: true,
   state: {
     index: -1,
-    changes: Array<Change>()
+    changes: Array<Change>(),
   },
   getters: {
     changes(state: any): Array<Change> {
@@ -44,7 +44,7 @@ const historyModule = {
     },
     currentRedo(state: any): Change | undefined {
       return state.changes[state.index + 1];
-    }
+    },
   },
   mutations: {
     add(state: any, change: Change) {
@@ -54,7 +54,7 @@ const historyModule = {
     clear(state: any) {
       state.changes.splice(0, Number.MAX_SAFE_INTEGER);
       state.index = -1;
-    }
+    },
   },
   actions: {
     undo(context: any): Change | undefined {
@@ -72,15 +72,15 @@ const historyModule = {
         return change;
       }
       return undefined;
-    }
-  }
+    },
+  },
 };
 
 const sectionsModule = {
   namespaced: true,
   state: {
     index: -1, // current playing section, -1 = no playing section
-    sections: Array<Section>()
+    sections: Array<Section>(),
   },
   getters: {
     index(state: any): number {
@@ -94,7 +94,7 @@ const sectionsModule = {
     },
     currentSection(state: any, getters: any): Section | undefined {
       return getters.indexInRange ? state.sections[state.index] : undefined;
-    }
+    },
   },
   mutations: {
     add(state: any, section: Section) {
@@ -147,7 +147,7 @@ const sectionsModule = {
     },
     index(state: any, index: number) {
       if (index >= -1 && index < state.sections.length) state.index = index;
-    }
+    },
   },
   actions: {
     setStart(context: any, start: { index: number; start: Timestamp }) {
@@ -158,7 +158,7 @@ const sectionsModule = {
       ) {
         context.commit("set", {
           index: start.index,
-          section: { start: start.start, end: oldSection.end }
+          section: { start: start.start, end: oldSection.end },
         });
       }
     },
@@ -167,7 +167,7 @@ const sectionsModule = {
       if (oldSection && oldSection.end.fullSeconds !== end.end.fullSeconds)
         context.commit("set", {
           index: end.index,
-          section: { start: oldSection.start, end: end.end }
+          section: { start: oldSection.start, end: end.end },
         });
     },
     removeLast(context: any) {
@@ -193,7 +193,7 @@ const sectionsModule = {
         context.commit("remove", change.first.index + 1);
         context.commit("set", {
           index: change.first.index,
-          section: change.first.old
+          section: change.first.old,
         });
       }
     },
@@ -204,31 +204,31 @@ const sectionsModule = {
       } else {
         context.commit("set", {
           index: change.first.index,
-          section: change.first.new
+          section: change.first.new,
         });
         context.commit("insert", {
           index: change.first.index + 1,
-          section: change.second
+          section: change.second,
         });
       }
     },
     undoSwap(context: any, change: SectionSwap) {
       context.commit("swap", {
         oldIndex: change.new,
-        newIndex: change.old
+        newIndex: change.old,
       });
     },
     redoSwap(context: any, change: SectionSwap) {
       context.commit("swap", {
         oldIndex: change.old,
-        newIndex: change.new
+        newIndex: change.new,
       });
     },
     undoStartUpdate(context: any, change: TimestampUpdate) {
       context
         .dispatch("setStart", {
           index: change.index,
-          start: change.old
+          start: change.old,
         })
         .then();
     },
@@ -236,7 +236,7 @@ const sectionsModule = {
       context
         .dispatch("setStart", {
           index: change.index,
-          start: change.new
+          start: change.new,
         })
         .then();
     },
@@ -244,7 +244,7 @@ const sectionsModule = {
       context
         .dispatch("setEnd", {
           index: change.index,
-          end: change.old
+          end: change.old,
         })
         .then();
     },
@@ -252,11 +252,11 @@ const sectionsModule = {
       context
         .dispatch("setEnd", {
           index: change.index,
-          end: change.new
+          end: change.new,
         })
         .then();
-    }
-  }
+    },
+  },
 };
 
 const playerModule = {
@@ -265,7 +265,7 @@ const playerModule = {
     player: undefined,
     state: -1, // UNDEFINED
     rendering: false,
-    hidden: true
+    hidden: true,
   },
   getters: {
     player(state: any): any {
@@ -279,7 +279,7 @@ const playerModule = {
     },
     hidden(state: any): boolean {
       return state.hidden;
-    }
+    },
   },
   mutations: {
     player(state: any, player: any) {
@@ -293,20 +293,20 @@ const playerModule = {
     },
     hidden(state: any, value: boolean) {
       state.hidden = value;
-    }
-  }
+    },
+  },
 };
 
 const videoModule = {
   namespaced: true,
   modules: {
     player: playerModule,
-    sections: sectionsModule
+    sections: sectionsModule,
   },
   state: {
     id: "",
     currentTime: Timestamp.fromSeconds(0),
-    duration: Timestamp.fromSeconds(0)
+    duration: Timestamp.fromSeconds(0),
   },
   getters: {
     id(state: any): string {
@@ -345,12 +345,12 @@ const videoModule = {
         sections: getters["sections/sections"].map((section: Section) => {
           return {
             start: section.start.fullSeconds,
-            end: section.end.fullSeconds
+            end: section.end.fullSeconds,
           };
-        })
+        }),
       };
       return encode(video);
-    }
+    },
   },
   mutations: {
     id(state: any, id: string) {
@@ -369,14 +369,14 @@ const videoModule = {
           (section: VideoCodecSection) => {
             return {
               start: Timestamp.fromSeconds(section.start),
-              end: Timestamp.fromSeconds(section.end)
+              end: Timestamp.fromSeconds(section.end),
             };
           }
         );
         state.id = video.id;
       }
-    }
-  }
+    },
+  },
 };
 
 const colorModule = {
@@ -384,12 +384,12 @@ const colorModule = {
   state: {
     light: {
       play: "red darken-1",
-      edit: "green darken-1"
+      edit: "green darken-1",
     },
     dark: {
       play: "red darken-3",
-      edit: "green darken-3"
-    }
+      edit: "green darken-3",
+    },
   },
   getters: {
     play(state: any): { light: string; dark: string } {
@@ -397,20 +397,20 @@ const colorModule = {
     },
     edit(state: any): { light: string; dark: string } {
       return { light: state.light.edit, dark: state.dark.edit };
-    }
-  }
+    },
+  },
 };
 
 export default new Vuex.Store({
   modules: {
     color: colorModule,
     video: videoModule,
-    history: historyModule
+    history: historyModule,
   },
   state: {
     mode: 0,
     initialMode: true,
-    loaded: false
+    loaded: false,
   },
   getters: {
     loaded(state: any): boolean {
@@ -433,7 +433,7 @@ export default new Vuex.Store({
     },
     mode(state): number {
       return state.mode;
-    }
+    },
   },
   mutations: {
     loaded(state, loaded: boolean) {
@@ -452,7 +452,7 @@ export default new Vuex.Store({
         state["video/sections/index"] = 0;
       }
       state.mode = n;
-    }
+    },
   },
   actions: {
     switchMode(context: any, n: number) {
@@ -491,7 +491,7 @@ export default new Vuex.Store({
           type: ChangeType.SectionStartUpdate,
           index: indexableSection.index,
           old: old.start,
-          new: indexableSection.section.start
+          new: indexableSection.section.start,
         });
       }
     },
@@ -506,7 +506,7 @@ export default new Vuex.Store({
           type: ChangeType.SectionEndUpdate,
           index: indexableSection.index,
           old: old.end,
-          new: indexableSection.section.end
+          new: indexableSection.section.end,
         });
       }
     },
@@ -517,7 +517,7 @@ export default new Vuex.Store({
         const change: SectionRemove = {
           type: ChangeType.SectionRemove,
           index,
-          section
+          section,
         };
         context.commit("history/add", change);
       }
@@ -536,7 +536,7 @@ export default new Vuex.Store({
         context.commit("history/add", {
           type: ChangeType.SectionSwap,
           old: args.oldIndex,
-          new: args.newIndex
+          new: args.newIndex,
         });
       }
     },
@@ -544,16 +544,16 @@ export default new Vuex.Store({
       const currentTime = context.getters["video/currentTime"];
       const firstSection = {
         start: context.getters["video/currentSectionStart"].clone(),
-        end: currentTime.clone()
+        end: currentTime.clone(),
       };
       const secondSection = {
         start: currentTime.clone(),
-        end: context.getters["video/currentSectionEnd"].clone()
+        end: context.getters["video/currentSectionEnd"].clone(),
       };
       const change = {
         type: ChangeType.SectionSplit,
         first: { index: undefined, old: undefined, new: firstSection },
-        second: secondSection
+        second: secondSection,
       };
       if (context.getters["video/sections/index"] !== -1) {
         const index = context.getters["video/sections/index"];
@@ -561,11 +561,11 @@ export default new Vuex.Store({
         change.first.old = context.getters["video/sections/currentSection"];
         context.commit("video/sections/set", {
           index: index,
-          section: firstSection
+          section: firstSection,
         });
         context.commit("video/sections/insert", {
           index: index + 1,
-          section: secondSection
+          section: secondSection,
         });
       } else {
         context.commit("video/sections/add", firstSection);
@@ -629,6 +629,6 @@ export default new Vuex.Store({
       context.commit("video/player/hidden", true);
       context.state.loaded = false;
       context.state.loaded = true;
-    }
-  }
+    },
+  },
 });

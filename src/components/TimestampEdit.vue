@@ -37,20 +37,21 @@
 </template>
 
 <script>
+import Vue from "vue";
 import TimestampField from "./TimestampField";
-export default {
+export default Vue.extend({
   name: "TimestampEdit",
   inheritAttrs: false,
   props: {
     type: {
       type: String,
-      required: true
+      required: true,
     },
     min: Object,
-    max: Object
+    max: Object,
   },
   data: () => ({
-    disabledSave: false
+    disabledSave: false,
   }),
   components: { TimestampField },
   methods: {
@@ -66,9 +67,9 @@ export default {
     clear() {
       this.field().clear();
       this.disabledSave = false;
-    }
-  }
-};
+    },
+  },
+});
 </script>
 
 <style scoped></style>

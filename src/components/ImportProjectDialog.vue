@@ -50,16 +50,17 @@
 </template>
 
 <script>
+import Vue from "vue";
 import { decode } from "vidsnip-codec";
 import { Timestamp, validId } from "vidsnip-utils";
 
-export default {
+export default Vue.extend({
   name: "ImportProjectDialog",
   data: () => ({
     value: "",
     code: "",
     show: false,
-    closeable: false
+    closeable: false,
   }),
   watch: {
     show(value) {
@@ -69,7 +70,7 @@ export default {
       }
     },
     value(value) {
-      if (value !== "") this.$emit("closeErrorSnackbar");
+      if (value !== "") this.$emit("close-error-snackbar");
       const id = this.$youtube.getIdFromUrl(value, { fuzzy: false }) ?? value;
       if (validId(id)) {
         this.$store.commit("video/player/hidden", true);
@@ -79,18 +80,18 @@ export default {
           this.$store.commit("history/clear");
           this.$store.commit("video/sections/splice", {
             index: 0,
-            deleteCount: Number.MAX_SAFE_INTEGER
+            deleteCount: Number.MAX_SAFE_INTEGER,
           });
           this.$store.commit("video/sections/index", -1);
           this.$store.commit("mode", 0);
-          this.$emit("rerenderPlayer");
+          this.$emit("rerender-player");
         }
         this.$store.commit("video/player/rendering", true);
         this.show = false;
       }
     },
     code(value) {
-      if (value !== "") this.$emit("closeErrorSnackbar");
+      if (value !== "") this.$emit("close-error-snackbar");
       const video = decode(value);
       if (video !== null && validId(video.id)) {
         this.$store.commit("video/player/hidden", true);
@@ -103,7 +104,7 @@ export default {
         if (this.closeable) {
           this.$store.commit("history/clear");
           this.$store.commit("mode", 0);
-          this.$emit("rerenderPlayer");
+          this.$emit("rerender-player");
           /*this.$store.commit('video/player/hidden', true);
               this.$store.commit('loaded', false);
               this.$store.commit("video/player/rendering", false);*/
@@ -111,17 +112,17 @@ export default {
         this.$store.commit("video/sections/splice", {
           index: 0,
           deleteCount: Number.MAX_SAFE_INTEGER,
-          items: video.sections.map(section => {
+          items: video.sections.map((section) => {
             return {
               start: Timestamp.fromSeconds(section.start),
-              end: Timestamp.fromSeconds(section.end)
+              end: Timestamp.fromSeconds(section.end),
             };
-          })
+          }),
         });
         this.$store.commit("video/player/rendering", true);
         this.show = false;
       }
-    }
+    },
   },
   methods: {
     showPersistent(error) {
@@ -133,9 +134,9 @@ export default {
       this.closeable = true;
       this.show = true;
       if (error) this.errorSnackbar = true;
-    }
-  }
-};
+    },
+  },
+});
 </script>
 
 <style scoped></style>

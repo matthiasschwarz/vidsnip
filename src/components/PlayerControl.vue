@@ -154,18 +154,19 @@
 </template>
 
 <script>
+import Vue from "vue";
 import { Timestamp } from "vidsnip-utils";
 import ShareProjectDialog from "@/components/ShareProjectDialog";
 
-export default {
+export default Vue.extend({
   name: "PlayerControl",
   components: {
-    ShareProjectDialog
+    ShareProjectDialog,
   },
   data: () => ({
     sliderValue: 0,
     sliderDrag: false,
-    unwatchCurrentTime: undefined
+    unwatchCurrentTime: undefined,
   }),
   computed: {
     currentTime() {
@@ -212,7 +213,7 @@ export default {
         this.$store.getters["video/sections/index"] >=
           this.$store.getters["video/sections/sections"].length - 1
       );
-    }
+    },
   },
   methods: {
     setSliderValue(value) {
@@ -261,18 +262,18 @@ export default {
     },
     showShareDialog() {
       this.$refs.shareDialog.show = true;
-    }
+    },
   },
   mounted() {
     this.unwatchCurrentTime = this.$store.watch(
       (state, getters) => getters["video/currentTime"],
-      value => this.setSliderValue(value.fullSeconds)
+      (value) => this.setSliderValue(value.fullSeconds)
     );
   },
   destroyed() {
     this.unwatchCurrentTime();
-  }
-};
+  },
+});
 </script>
 
 <style scoped></style>

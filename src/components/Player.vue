@@ -16,23 +16,24 @@
 </template>
 
 <script>
+import Vue from "vue";
 import { Timestamp } from "vidsnip-utils";
 
-export default {
+export default Vue.extend({
   name: "Player",
   inheritAttrs: false,
   props: {
     start: Number,
-    end: Number
+    end: Number,
   },
   computed: {
     player() {
       return this.$refs.youtube.player;
-    }
+    },
   },
   methods: {
     async emitCurrentTimeChange(newTime, oldTime) {
-      this.$emit("currentTimeChange", newTime, oldTime);
+      this.$emit("current-time-change", newTime, oldTime);
     },
     patchPlayerInfo(player) {
       const playerInfo = player.playerInfo;
@@ -44,7 +45,7 @@ export default {
         set(value) {
           this._playerInfo = value;
           patchCurrentTimeProperty(value);
-        }
+        },
       });
       player.playerInfo = playerInfo;
     },
@@ -57,13 +58,13 @@ export default {
         set(newValue) {
           if (newValue !== this._currentTime) emit(newValue, this._currentTime);
           this._currentTime = newValue;
-        }
+        },
       });
     },
     ready(player) {
       if (player.getDuration() === 0) {
         this.$store.commit("video/player/hidden", true);
-        this.$emit("invalidVideo", this.$t("error.invalidVideo"));
+        this.$emit("invalid-video", this.$t("error.invalidVideo"));
         if (this.$store.getters["video/player/rendering"])
           this.$store.commit("loaded", false);
         this.$store.commit("video/player/rendering", false);
@@ -95,15 +96,15 @@ export default {
         ); // exact duration
         this.estimatedDuration = false;
       }
-    }
+    },
   },
   data: () => ({
     estimatedDuration: true,
     unwatchCurrentTime: undefined,
-    currentTimeIntervalId: undefined
+    currentTimeIntervalId: undefined,
   }),
   mounted() {
-    this.player.addEventListener("onStateChange", event =>
+    this.player.addEventListener("onStateChange", (event) =>
       this.$store.commit("video/player/state", event.data)
     );
     this.unwatchCurrentTime = this.$store.watch(
@@ -173,7 +174,7 @@ export default {
   destroyed() {
     this.unwatchCurrentTime();
     clearInterval(this.currentTimeIntervalId);
-  }
+  },
   /*,
   destroyed() {
     window.YT = undefined;
@@ -182,7 +183,7 @@ export default {
     window.onYouTubeIframeAPIReady = undefined;
     this.player.removeEventListener("onStateChange");
   }*/
-};
+});
 </script>
 
 <style scoped>

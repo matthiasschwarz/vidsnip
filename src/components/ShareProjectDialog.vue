@@ -45,23 +45,24 @@
 </template>
 
 <script>
-export default {
+import Vue from "vue";
+export default Vue.extend({
   name: "ShareProjectDialog",
   data: () => ({
     show: false,
-    value: ""
+    value: "",
   }),
   watch: {
     show(value) {
       if (value) this.value = this.$store.getters["video/export"];
-    }
+    },
   },
   methods: {
     copyToClipboard() {
       navigator.clipboard.writeText(this.value);
-    }
-  }
-};
+    },
+  },
+});
 </script>
 
 <style scoped></style>

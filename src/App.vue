@@ -125,11 +125,11 @@ import Video from "@/components/Video.vue";
 export default Vue.extend({
   name: "App",
   components: {
-    Video
+    Video,
   },
   data: () => ({
     drawer: false,
-    languageMenu: false
+    languageMenu: false,
   }),
   computed: {
     localeCountry() {
@@ -139,7 +139,7 @@ export default Vue.extend({
         default:
           return "English";
       }
-    }
+    },
   },
   methods: {
     switchMode(n) {
@@ -155,14 +155,14 @@ export default Vue.extend({
     setLanguage(locale) {
       this.$i18n.locale = locale;
       document.documentElement.lang = locale;
-    }
+    },
   },
   mounted() {
     const locale = this.$i18n.locale.split("-")[0]; // assume no dialects are supported
     document.documentElement.lang = this.$i18n.availableLocales.includes(locale)
       ? locale
       : this.$i18n.fallbackLocale;
-  }
+  },
 });
 </script>
 

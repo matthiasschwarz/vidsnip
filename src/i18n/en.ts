@@ -41,7 +41,7 @@ export default {
     seconds: "seconds",
     minutes: "minutes",
     hours: "hours",
-    days: "days"
+    days: "days",
   },
   change: {
     undo: {
@@ -51,7 +51,7 @@ export default {
       sectionSplit: "Undo section split",
       sectionStartUpdate: "Undo section start update",
       sectionEndUpdate: "Undo section end update",
-      timestampUpdate: "Undo timestamp change"
+      timestampUpdate: "Undo timestamp change",
     },
     redo: {
       sectionAdd: "Redo section add",
@@ -60,21 +60,21 @@ export default {
       sectionSplit: "Redo section split",
       sectionStartUpdate: "Redo section start update",
       sectionEndUpdate: "Redo section end update",
-      timestampUpdate: "Redo timestamp change"
-    }
+      timestampUpdate: "Redo timestamp change",
+    },
   },
   error: {
     timestamp: {
       range: "{name} must be between {min} and {max}",
       higher: "Must be lower than {name} of {value}",
       lower: "Must be higher than {name} of {value}",
-      unit: "No change possible"
+      unit: "No change possible",
     },
     index: {
       higher: "Must be less or equals than the maximum index of {value}",
       lower: "Must be higher or equals than the minimum index of {value}",
-      invalid: "Invalid index"
+      invalid: "Invalid index",
     },
-    invalidVideo: "No video found under the given input"
-  }
+    invalidVideo: "No video found under the given input",
+  },
 };

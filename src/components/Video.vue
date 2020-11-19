@@ -24,8 +24,8 @@
             :key="playerKey"
             ref="player"
             :start="start"
-            @currentTimeChange="currentTimeChange"
-            @invalidVideo="invalidVideo($event)"
+            @current-time-change="currentTimeChange"
+            @invalid-video="invalidVideo($event)"
           />
         </v-card>
       </div>
@@ -80,7 +80,7 @@
                             :disabled="
                               $store.getters['video/currentTime']
                                 .fullSeconds ===
-                                $store.getters['video/duration'].fullSeconds
+                              $store.getters['video/duration'].fullSeconds
                             "
                           >
                             <v-icon>mdi-plus</v-icon>
@@ -102,9 +102,7 @@
                             <v-icon v-if="showIndex">
                               mdi-sort-variant-remove
                             </v-icon>
-                            <v-icon v-else>
-                              mdi-sort-variant
-                            </v-icon>
+                            <v-icon v-else> mdi-sort-variant </v-icon>
                           </v-btn>
                         </template>
                         <span v-if="showIndex">
@@ -255,7 +253,10 @@
                                   'updateSectionStartWithHistory',
                                   {
                                     index,
-                                    section: { start: $event, end: section.end }
+                                    section: {
+                                      start: $event,
+                                      end: section.end,
+                                    },
                                   }
                                 )
                               "
@@ -267,16 +268,19 @@
                               :initial="section.end"
                               :min="{
                                 type: 'sectionStart',
-                                value: section.start
+                                value: section.start,
                               }"
                               :max="{
                                 type: $t('duration'),
-                                value: $store.getters['video/duration']
+                                value: $store.getters['video/duration'],
                               }"
                               @save="
                                 $store.dispatch('updateSectionEndWithHistory', {
                                   index,
-                                  section: { start: section.start, end: $event }
+                                  section: {
+                                    start: section.start,
+                                    end: $event,
+                                  },
                                 })
                               "
                             ></TimestampMenu>
@@ -328,8 +332,8 @@
     </div>
     <import-project-dialog
       ref="importDialog"
-      @rerenderPlayer="rerenderPlayer"
-      @closeErrorSnackbar="closeErrorSnackbar"
+      @rerender-player="rerenderPlayer"
+      @close-error-snackbar="closeErrorSnackbar"
     ></import-project-dialog>
     <v-snackbar v-model="errorSnackbar" text timeout="6000" color="error" top
       ><div class="text-center">{{ errorSnackbarMessage }}</div></v-snackbar
@@ -338,6 +342,7 @@
 </template>
 
 <script>
+import Vue from "vue";
 import Player from "@/components/Player";
 import TimestampMenu from "@/components/TimestampMenu";
 import PlayerControl from "@/components/PlayerControl";
@@ -345,14 +350,14 @@ import ImportProjectDialog from "@/components/ImportProjectDialog";
 import { Timestamp } from "vidsnip-utils";
 import IndexMenu from "@/components/IndexMenu";
 
-export default {
+export default Vue.extend({
   name: "Video",
   components: {
     IndexMenu,
     ImportProjectDialog,
     PlayerControl,
     Player,
-    TimestampMenu
+    TimestampMenu,
   },
   data: () => ({
     timestampEdit: false,
@@ -361,7 +366,7 @@ export default {
     errorSnackbar: false,
     errorSnackbarMessage: "",
     sectionHeight: 0,
-    unwatchSectionHeight: undefined
+    unwatchSectionHeight: undefined,
   }),
   computed: {
     player() {
@@ -389,7 +394,7 @@ export default {
     redoTooltip() {
       const change = this.$store.getters["history/currentRedo"];
       return change !== undefined ? this.$t(`change.redo.${change.type}`) : "";
-    }
+    },
   },
   methods: {
     rerenderPlayer() {
@@ -398,7 +403,7 @@ export default {
     addCurrentSection() {
       this.$store.dispatch("addSectionWithHistory", {
         start: this.$store.getters["video/currentTime"].clone(),
-        end: this.$store.getters["video/duration"].clone()
+        end: this.$store.getters["video/duration"].clone(),
       });
       this.$store.commit(
         "video/sections/index",
@@ -417,20 +422,20 @@ export default {
       const currentTime = this.$store.getters["video/currentTime"];
       const firstSection = {
         start: this.$store.getters["video/currentSectionStart"].clone(),
-        end: currentTime.clone()
+        end: currentTime.clone(),
       };
       const secondSection = {
         start: currentTime.clone(),
-        end: this.$store.getters["video/currentSectionEnd"].clone()
+        end: this.$store.getters["video/currentSectionEnd"].clone(),
       };
       if (this.$store.getters["video/sections/index"] !== -1) {
         this.$store.commit("video/sections/set", {
           index: this.$store.getters["video/sections/index"],
-          section: firstSection
+          section: firstSection,
         });
         this.$store.commit("video/sections/insert", {
           index: this.$store.getters["video/sections/index"] + 1,
-          section: secondSection
+          section: secondSection,
         });
       } else {
         this.$store.commit("video/sections/add", firstSection);
@@ -463,16 +468,16 @@ export default {
     getSectionHeight() {
       return this.$store.getters["video/sections/sections"].length !== 0
         ? window.innerHeight -
-          48 - // toolbar height
-          64 - // section table title height
-          24 - // card padding, margin and border heights
+            48 - // toolbar height
+            64 - // section table title height
+            24 - // card padding, margin and border heights
             (this.$store.getters["isEditMode"] ? 36 : 0) -
             1
         : 0;
     },
     resizeEventListener() {
       this.$nextTick(() => (this.sectionHeight = this.getSectionHeight()));
-    }
+    },
   },
   mounted() {
     this.unwatchSectionHeight = this.$watch(
@@ -486,8 +491,8 @@ export default {
   destroyed() {
     window.removeEventListener("resize", this.resizeEventListener);
     this.unwatchSectionHeight();
-  }
-};
+  },
+});
 </script>
 
 <style scoped lang="scss">

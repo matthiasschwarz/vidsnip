@@ -41,7 +41,12 @@
             </v-row>
           </v-list-item>
           <v-list-item
-            style="min-height: auto; padding-left: 0; padding-right: 0; padding-top: 8px"
+            style="
+              min-height: auto;
+              padding-left: 0;
+              padding-right: 0;
+              padding-top: 8px;
+            "
           >
             <v-alert
               dense
@@ -82,24 +87,25 @@
 </template>
 
 <script>
+import Vue from "vue";
 import { InputErrorType } from "vidsnip-utils";
 import BoundedIntegerField from "@/components/BoundedIntegerField";
-export default {
+export default Vue.extend({
   name: "IndexMenu",
   components: {
-    BoundedIntegerField
+    BoundedIntegerField,
   },
   props: {
-    index: Number
+    index: Number,
   },
   data: () => ({
     show: false,
-    errorMessage: ""
+    errorMessage: "",
   }),
   computed: {
     error() {
       return this.errorMessage.length !== 0;
-    }
+    },
   },
   methods: {
     onValid() {
@@ -109,12 +115,12 @@ export default {
       switch (error.type) {
         case InputErrorType.LESS:
           this.errorMessage = this.$t("error.index.lower", {
-            value: error.min
+            value: error.min,
           });
           break;
         case InputErrorType.GREATER:
           this.errorMessage = this.$t("error.index.higher", {
-            value: error.max
+            value: error.max,
           });
           break;
         default:
@@ -126,7 +132,7 @@ export default {
       if (!isNaN(value) && this.index !== value)
         this.$store.dispatch("swapSectionWithHistory", {
           oldIndex: this.index,
-          newIndex: value
+          newIndex: value,
         });
       this.show = false;
     },
@@ -136,14 +142,14 @@ export default {
     clear() {
       this.errorMessage = "";
       this.$refs.inputField.clear();
-    }
+    },
   },
   watch: {
     show(value) {
       if (!value) this.clear();
-    }
-  }
-};
+    },
+  },
+});
 </script>
 
 <style scoped>

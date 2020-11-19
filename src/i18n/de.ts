@@ -41,7 +41,7 @@ export default {
     seconds: "Sekunden",
     minutes: "Minuten",
     hours: "Stunden",
-    days: "Tage"
+    days: "Tage",
   },
   change: {
     undo: {
@@ -51,7 +51,7 @@ export default {
       sectionSplit: "Aufteilen des Abschnittes rückgängig machen",
       sectionStartUpdate: "Änderung des Abschnittsanfang rückgängig machen",
       sectionEndUpdate: "Änderung des Abschnittsende rückgängig machen",
-      timestampUpdate: "Änderung des Zeitstempels rückgängig machen"
+      timestampUpdate: "Änderung des Zeitstempels rückgängig machen",
     },
     redo: {
       sectionAdd: "Hinzufügen des Abschnittes wiederholen",
@@ -60,22 +60,22 @@ export default {
       sectionSplit: "Aufteilen des Abschnittes wiederholen",
       sectionStartUpdate: "Änderung des Abschnittsanfang wiederholen",
       sectionEndUpdate: "Änderung des Abschnittsende wiederholen",
-      timestampUpdate: "Änderung des Zeitstempels wiederholen"
-    }
+      timestampUpdate: "Änderung des Zeitstempels wiederholen",
+    },
   },
   error: {
     timestamp: {
       range: "{name} müssen zwischen {min} und {max} sein",
       higher: "Muss kleiner sein als {name} von {value}",
       lower: "Muss größer sein als {name} von {value}",
-      unit: "Keine Änderungen möglich"
+      unit: "Keine Änderungen möglich",
     },
     index: {
       higher:
         "Muss kleiner oder gleich als der maximale Index von {value} sein",
       lower: "Muss größer oder gleich als der minimale Index von {value} sein",
-      invalid: "Ungültiger Index"
+      invalid: "Ungültiger Index",
     },
-    invalidVideo: "Kein Video unter diesen Eingaben gefunden"
-  }
+    invalidVideo: "Kein Video unter diesen Eingaben gefunden",
+  },
 };

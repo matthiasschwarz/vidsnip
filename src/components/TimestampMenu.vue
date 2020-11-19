@@ -36,29 +36,30 @@
 </template>
 
 <script>
+import Vue from "vue";
 import { Timestamp } from "vidsnip-utils";
 import TimestampEdit from "@/components/TimestampEdit";
 
-export default {
+export default Vue.extend({
   name: "TimestampMenu",
   components: { TimestampEdit },
   props: {
     type: String,
     initial: Timestamp,
     min: Object,
-    max: Object
+    max: Object,
   },
   data: () => ({
-    show: false
+    show: false,
   }),
   methods: {
     onSave(timestamp) {
       if (this.initial.fullSeconds !== timestamp.fullSeconds)
         this.$emit("save", timestamp);
       this.show = false;
-    }
-  }
-};
+    },
+  },
+});
 </script>
 
 <style scoped></style>
