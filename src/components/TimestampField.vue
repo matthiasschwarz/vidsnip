@@ -51,6 +51,7 @@
                   icon
                   v-on="on"
                   @click="setToInitial"
+                  :disabled="deleteDisabled"
                   style="margin-top: 8px; margin-left: 8px"
                 >
                   <v-icon> mdi-delete </v-icon>
@@ -114,6 +115,11 @@ export default Vue.extend({
           this.$store.getters["video/currentTime"].fullSeconds <=
             this.min.value.fullSeconds)
       );
+    },
+    deleteDisabled() {
+      for (const unit of this.units)
+        if (this.$refs[this.unitRef(unit)][0].value !== "") return false;
+      return true;
     },
     error() {
       return this.invalid.length !== 0;
