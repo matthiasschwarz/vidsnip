@@ -461,10 +461,8 @@ export default Vue.extend({
       this.openPersistentImportDialog();
     },
     showErrorSnackbar(message) {
-      console.log("show snackbar");
       this.errorSnackbarMessage = message;
       this.errorSnackbar = true;
-      console.log("show snackbar", this.errorSnackbar);
     },
     closeErrorSnackbar() {
       this.errorSnackbar = false;
