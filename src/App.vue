@@ -3,7 +3,7 @@
     <v-navigation-drawer v-model="drawer" absolute temporary>
       <v-list nav dense>
         <v-list-item>
-          <v-list-item-icon><v-icon>mdi-alpha-v-box</v-icon></v-list-item-icon>
+          <v-list-item-icon><v-icon>mdi-content-cut</v-icon></v-list-item-icon>
           <v-list-item-title>VidSnip</v-list-item-title>
         </v-list-item>
 
