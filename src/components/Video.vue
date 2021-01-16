@@ -166,161 +166,144 @@
                     </v-col>
                   </v-row>
                 </template>
-                <v-simple-table fixed-header :height="sectionHeight">
-                  <template v-slot:default>
-                    <thead>
-                      <tr>
-                        <th v-if="$store.getters.isEditMode"></th>
-                        <th v-if="showIndex && $store.getters.isEditMode"></th>
-                        <th class="text-center">{{ $t("start") }}</th>
-                        <th class="text-center">{{ $t("end") }}</th>
-                        <th v-if="$store.getters.isEditMode"></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr
-                        v-for="(section, index) in $store.getters[
-                          'video/sections/sections'
-                        ]"
-                        :key="index"
-                        :class="
-                          $store.getters['video/sections/index'] === index
-                            ? `highlight-section-${
-                                $vuetify.theme.dark ? 'dark' : 'light'
-                              }`
-                            : ''
-                        "
-                      >
-                        <template v-if="$store.getters.isEditMode">
-                          <td style="padding: 0">
-                            <template
-                              v-if="
-                                $store.getters['video/sections/index'] !== index
-                              "
-                            >
-                              <v-tooltip bottom>
-                                <template v-slot:activator="{ on: tooltip }">
-                                  <v-btn
-                                    icon
-                                    v-on="{ ...tooltip }"
-                                    @click="playSection(index)"
-                                    ><v-icon small>mdi-play</v-icon></v-btn
-                                  >
-                                </template>
-                                <span>{{ $t("play") }}</span>
-                              </v-tooltip>
-                            </template>
-                            <template v-else>
-                              <v-tooltip bottom>
-                                <template v-slot:activator="{ on: tooltip }">
-                                  <v-btn
-                                    icon
-                                    v-on="{ ...tooltip }"
-                                    @click="
-                                      $store.commit('video/sections/index', -1)
-                                    "
-                                    ><v-icon small
-                                      >mdi-selection-off</v-icon
-                                    ></v-btn
-                                  >
-                                </template>
-                                <span>{{ $t("deselect") }}</span>
-                              </v-tooltip>
-                            </template>
-                          </td>
-                        </template>
-                        <template v-if="showIndex && $store.getters.isEditMode">
-                          <td>
-                            <IndexMenu :index="index"></IndexMenu>
-                          </td>
-                        </template>
-                        <template v-if="$store.getters.isPlayMode">
-                          <td class="text-right">
-                            {{ section.start.toString() }}
-                          </td>
-                          <td class="text-right">
-                            {{ section.end.toString() }}
-                          </td>
-                        </template>
-                        <template v-else-if="$store.getters.isEditMode">
-                          <td class="text-right">
-                            <TimestampMenu
-                              :type="$t('editSectionStart')"
-                              :initial="section.start"
-                              :max="{ type: 'sectionEnd', value: section.end }"
-                              @save="
-                                $store.dispatch(
-                                  'updateSectionStartWithHistory',
-                                  {
-                                    index,
-                                    section: {
-                                      start: $event,
-                                      end: section.end,
-                                    },
-                                  }
-                                )
-                              "
-                            ></TimestampMenu>
-                          </td>
-                          <td class="text-right">
-                            <TimestampMenu
-                              :type="$t('editSectionEnd')"
-                              :initial="section.end"
-                              :min="{
-                                type: 'sectionStart',
-                                value: section.start,
-                              }"
-                              :max="{
-                                type: 'sectionEnd',
-                                value: durationBound,
-                              }"
-                              @save="
-                                $store.dispatch('updateSectionEndWithHistory', {
-                                  index,
-                                  section: {
-                                    start: section.start,
-                                    end: $event,
-                                  },
-                                })
-                              "
-                            ></TimestampMenu>
-                          </td>
-                          <td style="padding: 0">
+                <v-data-table
+                  :height="sectionHeight"
+                  :items="sectionTableItems"
+                  :headers="sectionTableHeaders"
+                  :no-data-text="$t('noSections')"
+                  fixed-header
+                  disable-pagination
+                  hide-default-footer
+                  disable-sort
+                >
+                  <template v-slot:item="{ item }">
+                    <tr
+                      :class="
+                        $store.getters['video/sections/index'] === item.index
+                          ? `highlight-section-${
+                              $vuetify.theme.dark ? 'dark' : 'light'
+                            }`
+                          : ''
+                      "
+                    >
+                      <template v-if="sectionTableColumnsShow[0]">
+                        <td style="padding: 0">
+                          <template
+                            v-if="
+                              $store.getters['video/sections/index'] !==
+                              item.index
+                            "
+                          >
                             <v-tooltip bottom>
-                              <template v-slot:activator="{ on }">
+                              <template v-slot:activator="{ on: tooltip }">
                                 <v-btn
                                   icon
-                                  v-on="on"
-                                  @click="
-                                    $store.dispatch(
-                                      'removeSectionWithHistory',
-                                      index
-                                    )
-                                  "
+                                  v-on="{ ...tooltip }"
+                                  @click="playSection(item.index)"
+                                  ><v-icon small>mdi-play</v-icon></v-btn
                                 >
-                                  <v-icon small>mdi-delete</v-icon>
-                                </v-btn>
                               </template>
-                              <span>{{ $t("delete") }}</span>
+                              <span>{{ $t("play") }}</span>
                             </v-tooltip>
-                          </td>
-                        </template>
-                      </tr>
-                    </tbody>
+                          </template>
+                          <template v-else>
+                            <v-tooltip bottom>
+                              <template v-slot:activator="{ on: tooltip }">
+                                <v-btn
+                                  icon
+                                  v-on="{ ...tooltip }"
+                                  @click="
+                                    $store.commit('video/sections/index', -1)
+                                  "
+                                  ><v-icon small
+                                    >mdi-selection-off</v-icon
+                                  ></v-btn
+                                >
+                              </template>
+                              <span>{{ $t("deselect") }}</span>
+                            </v-tooltip>
+                          </template>
+                        </td>
+                      </template>
+                      <template v-if="sectionTableColumnsShow[1]">
+                        <td>
+                          <IndexMenu :index="item.index"></IndexMenu>
+                        </td>
+                      </template>
+                      <template v-if="$store.getters.isPlayMode">
+                        <td class="text-right">
+                          {{ item.section.start.toString() }}
+                        </td>
+                        <td class="text-right">
+                          {{ item.section.end.toString() }}
+                        </td>
+                      </template>
+                      <template v-else-if="$store.getters.isEditMode">
+                        <td class="text-right">
+                          <TimestampMenu
+                            :type="$t('editSectionStart')"
+                            :initial="item.section.start"
+                            :max="{
+                              type: 'sectionEnd',
+                              value: item.section.end,
+                            }"
+                            @save="
+                              $store.dispatch('updateSectionStartWithHistory', {
+                                index: item.index,
+                                section: {
+                                  start: $event,
+                                  end: item.section.end,
+                                },
+                              })
+                            "
+                          ></TimestampMenu>
+                        </td>
+                        <td class="text-right">
+                          <TimestampMenu
+                            :type="$t('editSectionEnd')"
+                            :initial="item.section.end"
+                            :min="{
+                              type: 'sectionStart',
+                              value: item.section.start,
+                            }"
+                            :max="{
+                              type: 'sectionEnd',
+                              value: durationBound,
+                            }"
+                            @save="
+                              $store.dispatch('updateSectionEndWithHistory', {
+                                index: item.index,
+                                section: {
+                                  start: item.section.start,
+                                  end: $event,
+                                },
+                              })
+                            "
+                          ></TimestampMenu>
+                        </td>
+                        <td style="padding: 0">
+                          <v-tooltip bottom>
+                            <template v-slot:activator="{ on }">
+                              <v-btn
+                                icon
+                                v-on="on"
+                                @click="
+                                  $store.dispatch(
+                                    'removeSectionWithHistory',
+                                    item.index
+                                  )
+                                "
+                              >
+                                <v-icon small>mdi-delete</v-icon>
+                              </v-btn>
+                            </template>
+                            <span>{{ $t("delete") }}</span>
+                          </v-tooltip>
+                        </td>
+                      </template>
+                    </tr>
                   </template>
-                </v-simple-table>
-                <template
-                  v-if="$store.getters['video/sections/sections'].length !== 0"
-                >
-                  <v-divider></v-divider>
-                </template>
-                <template v-else>
-                  <div style="width: 100%">
-                    <v-alert tile class="text-center text-body-1">{{
-                      $t("noSections")
-                    }}</v-alert>
-                  </div>
-                </template>
+                </v-data-table>
               </template>
             </div>
           </div>
@@ -400,6 +383,58 @@ export default Vue.extend({
       const change = this.$store.getters["history/currentRedo"];
       return change !== undefined ? this.$t(`change.redo.${change.type}`) : "";
     },
+    sectionTableColumnsShow() {
+      return [
+        this.$store.getters.isEditMode,
+        this.showIndex && this.$store.getters.isEditMode,
+        true,
+        true,
+        this.$store.getters.isEditMode,
+      ];
+    },
+    sectionTableHeaders() {
+      let headers = [
+        {
+          text: "",
+          value: "firstAction",
+          sortable: false,
+        },
+        {
+          text: "",
+          value: "index",
+          sortable: false,
+        },
+        {
+          text: this.$t("start"),
+          value: "start",
+          sortable: false,
+          align: "center",
+        },
+        {
+          text: this.$t("end"),
+          value: "end",
+          sortable: false,
+          align: "center",
+        },
+        {
+          text: "",
+          value: "deleteAction",
+          sortable: false,
+        },
+      ];
+      let headersFiltered = [];
+      for (const [index, show] of this.sectionTableColumnsShow.entries())
+        if (show) headersFiltered.push(headers[index]);
+      return headersFiltered;
+    },
+    sectionTableItems() {
+      let sections = [];
+      for (const [index, section] of this.$store.getters[
+        "video/sections/sections"
+      ].entries())
+        sections.push({ index, section });
+      return sections;
+    },
   },
   methods: {
     rerenderPlayer() {
@@ -469,20 +504,21 @@ export default Vue.extend({
       this.errorSnackbarMessage = "";
     },
     getSectionHeight() {
-      return this.$store.getters["video/sections/sections"].length !== 0
-        ? window.innerHeight -
-            48 - // toolbar height
-            64 - // section table title height
-            24 - // card padding, margin and border heights
-            (this.$store.getters["isEditMode"] ? 36 : 0) -
-            1
-        : 0;
+      return (
+        window.innerHeight -
+        48 - // toolbar height
+        64 - // section table title height
+        24 - // card padding, margin and border heights
+        (this.$store.getters["isEditMode"] ? 36 : 0) -
+        1
+      );
     },
     resizeEventListener() {
       this.$nextTick(() => (this.sectionHeight = this.getSectionHeight()));
     },
   },
   mounted() {
+    this.sectionHeight = this.getSectionHeight();
     this.unwatchSectionHeight = this.$watch(
       this.getSectionHeight,
       () => (this.sectionHeight = this.getSectionHeight())
