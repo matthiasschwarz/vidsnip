@@ -15,6 +15,7 @@ export default {
   section: "Abschnitt | Abschnitte",
   noSections: "Keine Abschnitte",
   newSection: "Neuer Abschnitt",
+  sectionIndex: "Index",
   sectionStart: "der Abschnittsanfang",
   sectionEnd: "das Abschnittsende",
   duration: "die Laufzeit",

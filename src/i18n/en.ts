@@ -15,6 +15,7 @@ export default {
   section: "Section | Sections",
   noSections: "No sections",
   newSection: "New section",
+  sectionIndex: "Index",
   sectionStart: "the section start",
   sectionEnd: "the section end",
   duration: "the duration",

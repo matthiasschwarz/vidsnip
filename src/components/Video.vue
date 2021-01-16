@@ -400,7 +400,7 @@ export default Vue.extend({
           sortable: false,
         },
         {
-          text: "",
+          text: this.$t("sectionIndex"),
           value: "index",
           sortable: false,
         },
