@@ -76,6 +76,7 @@ export default Vue.extend({
         this.$store.commit("video/player/hidden", true);
         this.$store.commit("loaded", false);
         this.$store.commit("video/id", id);
+        this.$store.commit("mode", 1);
         if (this.closeable) {
           this.$store.commit("history/clear");
           this.$store.commit("video/sections/splice", {
@@ -83,7 +84,6 @@ export default Vue.extend({
             deleteCount: Number.MAX_SAFE_INTEGER,
           });
           this.$store.commit("video/sections/index", -1);
-          this.$store.commit("mode", 0);
           this.$emit("rerender-player");
         }
         this.$store.commit("video/player/rendering", true);
@@ -101,9 +101,9 @@ export default Vue.extend({
           "video/sections/index",
           video.sections.length === 0 ? -1 : 0
         );
+        this.$store.commit("mode", video.sections.length !== 0 ? 0 : 1);
         if (this.closeable) {
           this.$store.commit("history/clear");
-          this.$store.commit("mode", 0);
           this.$emit("rerender-player");
           /*this.$store.commit('video/player/hidden', true);
               this.$store.commit('loaded', false);
